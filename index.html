@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>FOOD ORDERING SYSTEM</h1>
+        <p class="subtitle">Choose your food and place your order.</p>
+
+        <form id="orderForm">
+
+            <!-- Customer Name -->
+            <div class="form-group">
+                <label for="customerName">Customer Name:</label>
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter customer name"
+                    required
+                >
+            </div>
+
+            <!-- Food -->
+            <div class="form-group">
+                <label for="foodSelect">Choose Food:</label>
+                <select id="foodSelect" required>
+                    <option value="">Loading food...</option>
+                </select>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input
+                    type="text"
+                    id="price"
+                    value="₱0.00"
+                    readonly
+                >
+            </div>
+
+            <!-- Quantity -->
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input
+                    type="number"
+                    id="quantity"
+                    min="1"
+                    value="1"
+                    required
+                >
+            </div>
+
+            <!-- Total -->
+            <div class="total-box">
+                <span>Total:</span>
+                <strong id="total">₱0.00</strong>
+            </div>
+
+            <!-- Button -->
+            <button type="submit" id="placeOrderBtn">
+                PLACE ORDER
+            </button>
+
+            <!-- Message -->
+            <div id="message"></div>
+
+        </form>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
