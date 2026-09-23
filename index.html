@@ -3,82 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Food Ordering System</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 </head>
+
 <body>
 
-<div class="container">
-    <div class="card">
+    <main class="page-wrapper">
 
-        <h1>FOOD ORDERING SYSTEM</h1>
-        <p class="subtitle">Choose your food and place your order.</p>
+        <section class="order-card">
 
-        <form id="orderForm">
+            <!-- Header -->
+            <div class="order-header">
 
-            <!-- Customer Name -->
-            <div class="form-group">
-                <label for="customerName">Customer Name:</label>
-                <input
-                    type="text"
-                    id="customerName"
-                    placeholder="Enter customer name"
-                    required
+                <div class="brand-icon">
+                    🍴
+                </div>
+
+                <div>
+                    <span class="eyebrow">WELCOME</span>
+                    <h1>Food Ordering System</h1>
+                    <p>Choose your favorite food and place your order.</p>
+                </div>
+
+            </div>
+
+
+            <!-- Order Form -->
+            <form id="orderForm">
+
+                <!-- Customer -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">01</span>
+
+                        <div>
+                            <h2>Customer Information</h2>
+                            <p>Tell us who is placing the order.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerName">
+                            Customer Name
+                        </label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+
+                            <input
+                                type="text"
+                                id="customerName"
+                                placeholder="Enter customer name"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Food Selection -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">02</span>
+
+                        <div>
+                            <h2>Choose Your Food</h2>
+                            <p>Select an item from our menu.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foodSelect">
+                            Food Item
+                        </label>
+
+                        <div class="input-wrapper select-wrapper">
+                            <span class="input-icon">🍔</span>
+
+                            <select id="foodSelect" required>
+                                <option value="">Loading food...</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <!-- Price + Quantity -->
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="price">
+                                Price
+                            </label>
+
+                            <div class="input-wrapper price-input">
+                                <span class="input-icon">₱</span>
+
+                                <input
+                                    type="text"
+                                    id="price"
+                                    value="₱0.00"
+                                    readonly
+                                >
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="quantity">
+                                Quantity
+                            </label>
+
+                            <div class="input-wrapper">
+                                <span class="input-icon">×</span>
+
+                                <input
+                                    type="number"
+                                    id="quantity"
+                                    min="1"
+                                    value="1"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Order Summary -->
+                <div class="summary-box">
+
+                    <div class="summary-top">
+                        <div>
+                            <span class="summary-label">ORDER TOTAL</span>
+                            <p>Amount to pay</p>
+                        </div>
+
+                        <span class="summary-icon">🛒</span>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Total</span>
+
+                        <strong id="total">
+                            ₱0.00
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    id="placeOrderBtn"
+                    class="place-order-btn"
                 >
+                    <span>PLACE ORDER</span>
+                    <span class="button-arrow">→</span>
+                </button>
+
+
+                <!-- Message -->
+                <div id="message"></div>
+
+            </form>
+
+
+            <!-- Footer -->
+            <div class="card-footer">
+                <span>🍽️</span>
+                Fresh food. Simple ordering.
             </div>
 
-            <!-- Food -->
-            <div class="form-group">
-                <label for="foodSelect">Choose Food:</label>
-                <select id="foodSelect" required>
-                    <option value="">Loading food...</option>
-                </select>
-            </div>
+        </section>
 
-            <!-- Price -->
-            <div class="form-group">
-                <label for="price">Price:</label>
-                <input
-                    type="text"
-                    id="price"
-                    value="₱0.00"
-                    readonly
-                >
-            </div>
+    </main>
 
-            <!-- Quantity -->
-            <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input
-                    type="number"
-                    id="quantity"
-                    min="1"
-                    value="1"
-                    required
-                >
-            </div>
 
-            <!-- Total -->
-            <div class="total-box">
-                <span>Total:</span>
-                <strong id="total">₱0.00</strong>
-            </div>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-            <!-- Button -->
-            <button type="submit" id="placeOrderBtn">
-                PLACE ORDER
-            </button>
-
-            <!-- Message -->
-            <div id="message"></div>
-
-        </form>
-
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+    <!-- Main Script -->
+    <script src="script.js"></script>
 
 </body>
 </html>
