@@ -1,20 +1,45 @@
 ```css
-/* ==============================
-   RESET
-============================== */
+/* =========================================
+   RESET & GLOBAL
+========================================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #eff6ff;
 
-/* ==============================
-   BODY
-============================== */
+    --text-dark: #1e293b;
+    --text: #334155;
+    --text-light: #64748b;
+
+    --border: #dbe2ea;
+    --background: #f4f7fb;
+    --white: #ffffff;
+
+    --success: #16a34a;
+    --error: #dc2626;
+
+    --radius: 12px;
+
+    --shadow:
+        0 12px 35px rgba(15, 23, 42, 0.08);
+
+    --transition:
+        all 0.25s ease;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #f4f7fb 0%, #eaf1fb 100%);
+
     min-height: 100vh;
 
     display: flex;
@@ -23,49 +48,59 @@ body {
 
     padding: 20px;
 
-    color: #222;
+    color: var(--text-dark);
+
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(37, 99, 235, 0.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(59, 130, 246, 0.08),
+            transparent 30%
+        ),
+        var(--background);
 
     overflow-x: hidden;
 }
 
 
-/* ==============================
+/* =========================================
    CONTAINER
-============================== */
+========================================= */
 .container {
     width: 100%;
     max-width: 500px;
 
-    margin: auto;
+    animation: containerEnter 0.7s ease-out;
 }
 
 
-/* ==============================
-   MAIN CARD
-============================== */
+/* =========================================
+   CARD
+========================================= */
 .card {
     position: relative;
 
-    background: #ffffff;
-
     width: 100%;
 
-    padding: 38px;
+    padding: 36px;
+
+    background: rgba(255, 255, 255, 0.97);
+
+    border: 1px solid rgba(226, 232, 240, 0.9);
 
     border-radius: 18px;
 
-    border: 1px solid #e8edf4;
-
-    box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.07),
-        0 2px 8px rgba(37, 99, 235, 0.04);
-
-    transition: all 0.25s ease;
+    box-shadow: var(--shadow);
 
     overflow: hidden;
+
+    transition: var(--transition);
 }
 
-/* Small blue accent on top */
 .card::before {
     content: "";
 
@@ -77,146 +112,196 @@ body {
     width: 100%;
     height: 4px;
 
-    background: #2563eb;
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #3b82f6,
+        #60a5fa
+    );
 }
 
 .card:hover {
     box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.09),
-        0 3px 10px rgba(37, 99, 235, 0.05);
+        0 18px 45px rgba(15, 23, 42, 0.11);
 }
 
 
-/* ==============================
-   TITLE
-============================== */
+/* =========================================
+   HEADER
+========================================= */
 h1 {
     text-align: center;
 
     font-size: 28px;
 
-    font-weight: 700;
+    font-weight: 800;
 
-    color: #1f2937;
+    letter-spacing: -0.5px;
+
+    color: var(--text-dark);
 
     margin-bottom: 8px;
 
-    letter-spacing: -0.4px;
+    animation: titleEnter 0.7s ease-out 0.1s both;
 }
 
-
-/* ==============================
-   SUBTITLE
-============================== */
 .subtitle {
     text-align: center;
 
-    color: #777;
+    color: var(--text-light);
 
     font-size: 14px;
 
-    line-height: 1.5;
+    line-height: 1.6;
 
     margin-bottom: 30px;
+
+    animation: titleEnter 0.7s ease-out 0.2s both;
 }
 
 
-/* ==============================
+/* =========================================
    FORM GROUP
-============================== */
+========================================= */
 .form-group {
     margin-bottom: 20px;
+
+    animation: formEnter 0.5s ease-out both;
+}
+
+/* Give each field a slightly delayed entrance */
+.form-group:nth-child(1) {
+    animation-delay: 0.10s;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.form-group:nth-child(3) {
+    animation-delay: 0.20s;
+}
+
+.form-group:nth-child(4) {
+    animation-delay: 0.25s;
+}
+
+.form-group:nth-child(5) {
+    animation-delay: 0.30s;
+}
+
+.form-group:nth-child(6) {
+    animation-delay: 0.35s;
 }
 
 
-/* ==============================
+/* =========================================
    LABEL
-============================== */
+========================================= */
 label {
     display: block;
 
-    font-size: 14px;
-
-    font-weight: 600;
-
     margin-bottom: 8px;
 
-    color: #333;
+    color: var(--text);
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition: var(--transition);
 }
 
 
-/* ==============================
+/* =========================================
    INPUT & SELECT
-============================== */
+========================================= */
 input,
 select {
     width: 100%;
 
-    height: 48px;
+    min-height: 48px;
 
     padding: 12px 14px;
 
-    border: 1px solid #d6dce5;
+    border: 1px solid var(--border);
 
-    border-radius: 9px;
-
-    font-family: Arial, Helvetica, sans-serif;
-
-    font-size: 15px;
-
-    color: #333;
-
-    background: #ffffff;
+    border-radius: var(--radius);
 
     outline: none;
 
+    background: var(--white);
+
+    color: var(--text-dark);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
     transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.2s ease,
+        background 0.25s ease;
 }
 
 
 /* Placeholder */
 input::placeholder {
-    color: #9ca3af;
+    color: #94a3b8;
+
+    transition: opacity 0.2s ease;
 }
 
 
 /* Hover */
 input:hover,
 select:hover {
-    border-color: #b9c3d1;
+    border-color: #b8c4d3;
 }
 
 
 /* Focus */
 input:focus,
 select:focus {
-    border-color: #2563eb;
+    border-color: var(--primary);
 
     background: #ffffff;
 
     box-shadow:
         0 0 0 3px rgba(37, 99, 235, 0.10);
+
+    transform: translateY(-1px);
+}
+
+input:focus::placeholder {
+    opacity: 0.5;
 }
 
 
 /* Readonly */
 input[readonly] {
-    background: #f3f4f6;
+    background: #f8fafc;
 
-    color: #444;
+    color: #475569;
 
     font-weight: 600;
 
     cursor: default;
 }
 
+input[readonly]:focus {
+    transform: none;
 
-/* ==============================
+    box-shadow: none;
+
+    border-color: var(--border);
+}
+
+
+/* =========================================
    TOTAL BOX
-============================== */
+========================================= */
 .total-box {
     display: flex;
 
@@ -224,93 +309,152 @@ input[readonly] {
 
     align-items: center;
 
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
+    gap: 15px;
 
     padding: 16px 18px;
 
-    border-radius: 10px;
-
     margin: 10px 0 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #eff6ff
+        );
+
+    border: 1px solid #dbeafe;
+
+    border-radius: var(--radius);
+
+    color: var(--text);
 
     font-size: 17px;
 
-    color: #374151;
-
-    transition: all 0.2s ease;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
 .total-box:hover {
-    background: #f5f9ff;
+    transform: translateY(-2px);
 
-    border-color: #d5e3f8;
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.08);
 }
 
 .total-box strong {
-    font-size: 22px;
+    color: var(--primary);
 
-    color: #2563eb;
+    font-size: 23px;
 
-    font-weight: 700;
+    font-weight: 800;
+
+    white-space: nowrap;
 }
 
 
-/* ==============================
+/* =========================================
    BUTTON
-============================== */
+========================================= */
 button {
     position: relative;
 
     width: 100%;
 
-    min-height: 48px;
+    min-height: 50px;
 
-    padding: 13px 16px;
+    padding: 13px 18px;
 
     border: none;
 
-    border-radius: 9px;
+    border-radius: var(--radius);
 
-    background: #2563eb;
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #3b82f6
+        );
 
     color: #ffffff;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: inherit;
 
     font-size: 16px;
 
     font-weight: 700;
 
+    letter-spacing: 0.1px;
+
     cursor: pointer;
 
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-/* Button hover */
-button:hover {
-    background: #1d4ed8;
-
-    transform: translateY(-1px);
+    overflow: hidden;
 
     box-shadow:
-        0 5px 12px rgba(37, 99, 235, 0.20);
+        0 7px 18px rgba(37, 99, 235, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
 }
 
 
-/* Button active */
+/* Button shine animation */
+button::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.25),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition: left 0.6s ease;
+}
+
+button:hover::before {
+    left: 130%;
+}
+
+button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #2563eb
+        );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(37, 99, 235, 0.30);
+}
+
 button:active {
     transform: translateY(0);
 
-    box-shadow: none;
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.20);
 }
 
 
-/* Disabled button */
+/* Disabled */
 button:disabled {
     background: #94a3b8;
 
@@ -318,58 +462,134 @@ button:disabled {
 
     cursor: not-allowed;
 
-    transform: none;
-
     box-shadow: none;
+
+    transform: none;
+}
+
+button:disabled::before {
+    display: none;
 }
 
 
-/* ==============================
+/* =========================================
    MESSAGE
-============================== */
+========================================= */
 #message {
+    min-height: 22px;
+
     margin-top: 18px;
 
     text-align: center;
 
     font-size: 14px;
 
-    font-weight: 600;
+    font-weight: 700;
 
     line-height: 1.5;
 
-    min-height: 22px;
+    transition: all 0.3s ease;
 }
 
 
 /* Success */
 .success {
-    color: #16a34a;
+    color: var(--success);
+
+    animation: messageEnter 0.4s ease-out;
 }
 
 
 /* Error */
 .error {
-    color: #dc2626;
+    color: var(--error);
+
+    animation: messageEnter 0.4s ease-out;
 }
 
 
-/* ==============================
+/* =========================================
    FOCUS ACCESSIBILITY
-============================== */
+========================================= */
 input:focus-visible,
 select:focus-visible,
 button:focus-visible {
-    outline: 2px solid rgba(37, 99, 235, 0.25);
+    outline: 3px solid rgba(37, 99, 235, 0.18);
 
     outline-offset: 2px;
 }
 
 
-/* ==============================
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes containerEnter {
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+@keyframes titleEnter {
+    from {
+        opacity: 0;
+
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+@keyframes formEnter {
+    from {
+        opacity: 0;
+
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+@keyframes messageEnter {
+    from {
+        opacity: 0;
+
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================
    TABLET
-============================== */
+========================================= */
 @media (max-width: 700px) {
+
     body {
         padding: 16px;
     }
@@ -384,33 +604,36 @@ button:focus-visible {
 }
 
 
-/* ==============================
+/* =========================================
    MOBILE
-============================== */
+========================================= */
 @media (max-width: 600px) {
+
     body {
+        min-height: 100dvh;
+
         padding: 12px;
 
         align-items: flex-start;
     }
 
     .container {
-        margin-top: 18px;
+        margin-top: 15px;
     }
 
     .card {
-        padding: 27px 19px;
+        padding: 28px 19px;
 
         border-radius: 16px;
 
         box-shadow:
-            0 8px 25px rgba(0, 0, 0, 0.07);
+            0 10px 28px rgba(15, 23, 42, 0.08);
     }
 
     h1 {
         font-size: 23px;
 
-        margin-bottom: 7px;
+        letter-spacing: -0.3px;
     }
 
     .subtitle {
@@ -431,7 +654,7 @@ button:focus-visible {
 
     input,
     select {
-        height: 47px;
+        min-height: 48px;
 
         padding: 11px 13px;
 
@@ -441,7 +664,7 @@ button:focus-visible {
     .total-box {
         padding: 14px 15px;
 
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .total-box strong {
@@ -449,23 +672,24 @@ button:focus-visible {
     }
 
     button {
-        min-height: 48px;
+        min-height: 50px;
 
         font-size: 15px;
     }
 }
 
 
-/* ==============================
-   SMALL MOBILE
-============================== */
+/* =========================================
+   SMALL PHONES
+========================================= */
 @media (max-width: 380px) {
+
     body {
         padding: 8px;
     }
 
     .container {
-        margin-top: 10px;
+        margin-top: 8px;
     }
 
     .card {
@@ -480,14 +704,42 @@ button:focus-visible {
 
     .subtitle {
         font-size: 13px;
+
+        margin-bottom: 22px;
     }
 
     .total-box {
         padding: 13px;
+
+        font-size: 14px;
     }
 
     .total-box strong {
         font-size: 20px;
+    }
+
+    button {
+        min-height: 48px;
+    }
+}
+
+
+/* =========================================
+   REDUCE ANIMATION FOR USERS
+   WHO PREFER LESS MOTION
+========================================= */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+
+        scroll-behavior: auto !important;
     }
 }
 ```
