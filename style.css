@@ -84,7 +84,7 @@ input:disabled, select:disabled { opacity: .65; cursor: not-allowed; }
 .menu-status { font-size: 13px; color: var(--muted); }
 .menu-status:not(:empty) { padding: 10px 0 20px; }
 .food-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
-.food-card { position: relative; text-align: left; border: 1px solid var(--border); background: var(--paper); border-radius: 17px; padding: 10px; color: var(--ink); min-width: 0; display: flex; flex-direction: column; transition: transform .2s, border-color .2s, box-shadow .2s; animation: enter .45s ease both; animation-delay: var(--delay, 0ms); }
+.food-card { position: relative; text-align: left; border: 1px solid var(--border); background: var(--paper); border-radius: 17px; padding: 10px; color: var(--ink); min-width: 0; display: flex; flex-direction: column; transition: transform .2s, border-color .2s, box-shadow .2s; animation: enter .45s ease backwards; animation-delay: var(--delay, 0ms); }
 .food-card:hover:not(:disabled) { transform: translateY(-5px); border-color: #b9c8b2; box-shadow: 0 10px 24px #234c3e0d; }
 .food-card.is-selected { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
 .food-card:disabled { opacity: .7; }

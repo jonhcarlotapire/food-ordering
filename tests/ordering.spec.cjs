@@ -186,3 +186,12 @@ test("keyboard selection and reduced-motion preferences are respected", async ({
     }));
     expect(styles).toEqual({ animation: "none", scroll: "auto" });
 });
+
+test("card hover animation remains active after its entrance animation", async ({ page }) => {
+    await mockBackend(page);
+    const card = page.locator(".food-card").first();
+    await card.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
+    await card.hover();
+    await expect.poll(() => card.evaluate(element => getComputedStyle(element).transform))
+        .toBe("matrix(1, 0, 0, 1, 0, -5)");
+});
