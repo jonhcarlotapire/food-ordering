@@ -3,79 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Ordering System</title>
+    <meta name="theme-color" content="#234c3e">
+    <meta name="description" content="Pick your favorite meal, customize your quantity, and place your order with JC Kainan.">
+    <title>JC Kainan | Food Ordering</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <div class="card">
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-leaf" viewBox="0 0 24 24"><path d="M20 4c-8-1-15 2-15 8a7 7 0 0 0 7 7c6 0 9-7 8-15Z"/><path d="M4 21 15 10"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-bag" viewBox="0 0 24 24"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="icon-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+</svg>
 
-        <h1>FOOD ORDERING SYSTEM</h1>
-        <p class="subtitle">Choose your food and place your order.</p>
+<a class="skip-link" href="#menu">Skip to menu</a>
+<div class="page-shell">
+    <header class="site-header">
+        <a class="brand" href="./" aria-label="JC Kainan home">
+            <span class="brand-mark"><svg class="icon"><use href="#icon-leaf"/></svg></span>
+            <span>JC<span class="brand-accent"> Kainan</span><small>FOOD ORDERING</small></span>
+        </a>
+        <nav aria-label="Main navigation">
+            <a class="nav-menu" href="#menu">The menu</a>
+            <a class="order-link" href="#your-order"><svg class="icon"><use href="#icon-bag"/></svg>Your order<span id="orderCount" class="order-count">0</span></a>
+        </nav>
+    </header>
 
-        <form id="orderForm">
-
-            <!-- Customer Name -->
-            <div class="form-group">
-                <label for="customerName">Customer Name:</label>
-                <input
-                    type="text"
-                    id="customerName"
-                    placeholder="Enter customer name"
-                    required
-                >
+    <main>
+        <section class="hero" aria-labelledby="heroTitle">
+            <div class="hero-copy">
+                <span class="eyebrow"><span class="small-leaf" aria-hidden="true">✦</span> A LITTLE JOY ON YOUR PLATE</span>
+                <h1 id="heroTitle">Good food.<br>Great <span>mood.</span></h1>
+                <p>Your next favorite meal is just a few clicks away.<br class="desktop-break"> Pick something delicious. We’ll take your order.</p>
+                <a class="primary-link" href="#menu">Explore the menu<svg class="icon"><use href="#icon-arrow"/></svg></a>
             </div>
-
-            <!-- Food -->
-            <div class="form-group">
-                <label for="foodSelect">Choose Food:</label>
-                <select id="foodSelect" required>
-                    <option value="">Loading food...</option>
-                </select>
+            <div class="hero-art" aria-hidden="true">
+                <div class="hero-ring"></div>
+                <span class="hero-spark spark-one">✦</span><span class="hero-spark spark-two">✧</span>
+                <img class="hero-plate" src="assets/meal.svg" alt="" width="440" height="440" fetchpriority="high">
+                <div class="floating-note"><span class="note-icon">♡</span><span>A little comfort.<strong>A whole lot of flavor.</strong></span></div>
             </div>
+        </section>
 
-            <!-- Price -->
-            <div class="form-group">
-                <label for="price">Price:</label>
-                <input
-                    type="text"
-                    id="price"
-                    value="₱0.00"
-                    readonly
-                >
-            </div>
+        <ol class="order-steps" aria-label="How to order">
+            <li><span>01</span>Pick your meal</li>
+            <li><span>02</span>Make it yours</li>
+            <li><span>03</span>Place your order</li>
+        </ol>
 
-            <!-- Quantity -->
-            <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input
-                    type="number"
-                    id="quantity"
-                    min="1"
-                    value="1"
-                    required
-                >
-            </div>
+        <div class="ordering-layout">
+            <section id="menu" class="menu-section" aria-labelledby="menuTitle">
+                <div class="section-heading">
+                    <div><span class="eyebrow">FIND YOUR FAVORITE</span><h2 id="menuTitle">What sounds good?</h2></div>
+                    <span id="menuCount" class="menu-count">Our menu</span>
+                </div>
+                <div class="search-field">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg>
+                    <label class="sr-only" for="foodSearch">Search the menu</label>
+                    <input id="foodSearch" type="search" placeholder="Search for something delicious…" autocomplete="off" maxlength="100">
+                </div>
+                <p id="menuStatus" class="menu-status" role="status" aria-live="polite">Getting the menu ready…</p>
+                <div id="foodGrid" class="food-grid" aria-busy="true">
+                    <div class="food-skeleton" aria-hidden="true"></div><div class="food-skeleton" aria-hidden="true"></div><div class="food-skeleton" aria-hidden="true"></div>
+                </div>
+                <button id="retryFoodsBtn" class="retry-button" type="button" hidden>Try loading the menu again<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+                <p class="menu-footnote"><svg class="icon" aria-hidden="true"><use href="#icon-leaf"/></svg>A good day starts with a good meal.</p>
+            </section>
 
-            <!-- Total -->
-            <div class="total-box">
-                <span>Total:</span>
-                <strong id="total">₱0.00</strong>
-            </div>
+            <aside id="your-order" class="order-panel" aria-labelledby="orderTitle">
+                <div class="order-heading"><div><span class="eyebrow">LET’S MAKE IT HAPPEN</span><h2 id="orderTitle">Your order</h2></div><span class="bag-icon"><svg class="icon" aria-hidden="true"><use href="#icon-bag"/></svg></span></div>
+                <p class="order-intro">A few details, then you’re all set.</p>
+                <form id="orderForm">
+                    <fieldset id="orderFields">
+                        <legend class="sr-only">Order details</legend>
+                        <div class="form-group">
+                            <label for="customerName">Your name</label>
+                            <input type="text" id="customerName" name="customerName" placeholder="Who are we cooking for?" autocomplete="name" maxlength="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="foodSelect">Your meal</label>
+                            <select id="foodSelect" name="food" required disabled><option value="">Loading the menu…</option></select>
+                        </div>
+                        <div class="quantity-price-row">
+                            <div class="form-group quantity-group">
+                                <label for="quantity">Quantity</label>
+                                <div class="quantity-control">
+                                    <button type="button" id="decreaseQuantity" aria-label="Decrease quantity" disabled><svg class="icon" aria-hidden="true"><use href="#icon-minus"/></svg></button>
+                                    <input type="number" id="quantity" name="quantity" min="1" max="99" step="1" value="1" inputmode="numeric" required>
+                                    <button type="button" id="increaseQuantity" aria-label="Increase quantity"><svg class="icon" aria-hidden="true"><use href="#icon-plus"/></svg></button>
+                                </div>
+                            </div>
+                            <div class="form-group price-group"><label for="price">Price per meal</label><input type="text" id="price" value="₱0.00" readonly tabindex="-1"></div>
+                        </div>
+                    </fieldset>
+                    <div class="order-summary"><span id="summaryMeal">No meal selected yet</span><span id="summaryQuantity">Choose from the menu</span></div>
+                    <div class="total-box"><div><span>Your total</span><small>All prices in Philippine pesos</small></div><strong id="total" aria-live="polite" aria-atomic="true">₱0.00</strong></div>
+                    <button type="submit" id="placeOrderBtn" class="place-order-button" disabled><span class="button-spinner" aria-hidden="true"></span><span id="orderButtonLabel">Place order</span><svg class="icon button-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+                    <p class="order-hint">Select a meal to get started.</p>
+                    <div id="message" role="status" aria-live="polite" aria-atomic="true"></div>
+                </form>
+            </aside>
+        </div>
+    </main>
 
-            <!-- Button -->
-            <button type="submit" id="placeOrderBtn">
-                PLACE ORDER
-            </button>
-
-            <!-- Message -->
-            <div id="message"></div>
-
-        </form>
-
-    </div>
+    <footer class="site-footer"><span>JC<span class="brand-accent"> Kainan</span></span><p>Good food. Simple ordering. Happy you.</p><a href="#menu">Back to menu <span aria-hidden="true">↑</span></a></footer>
 </div>
+<noscript><p class="noscript-notice">Please enable JavaScript to view the menu and place an order.</p></noscript>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
