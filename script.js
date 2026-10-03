@@ -1,6 +1,12 @@
-// Keep the existing Supabase tables and public browser configuration.
-const SUPABASE_URL = "https://dmssiqklrhlkygfakaob.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_zpeH_CGSNOGrTqaRF1zSXw_6spivvqY";
+// Built-in menu: checkout does not depend on an external database or SDK.
+const foods = Object.freeze([
+    Object.freeze({ id: 1, food_name: "Classic Burger", price: 120 }),
+    Object.freeze({ id: 2, food_name: "Margherita Pizza", price: 245 }),
+    Object.freeze({ id: 3, food_name: "Chicken Rice", price: 150 }),
+    Object.freeze({ id: 4, food_name: "Spaghetti", price: 130 }),
+    Object.freeze({ id: 5, food_name: "Crispy Fries", price: 75 })
+]);
+const ORDERS_STORAGE_KEY = "jc-kainan.orders.v1";
 
 const orderForm = document.getElementById("orderForm");
 const orderFields = document.getElementById("orderFields");
@@ -16,24 +22,24 @@ const foodGrid = document.getElementById("foodGrid");
 const foodSearch = document.getElementById("foodSearch");
 const menuStatus = document.getElementById("menuStatus");
 const menuCount = document.getElementById("menuCount");
-const retryFoodsBtn = document.getElementById("retryFoodsBtn");
 const decreaseQuantity = document.getElementById("decreaseQuantity");
 const increaseQuantity = document.getElementById("increaseQuantity");
 const summaryMeal = document.getElementById("summaryMeal");
 const summaryQuantity = document.getElementById("summaryQuantity");
 const orderCount = document.getElementById("orderCount");
 const orderHint = document.querySelector(".order-hint");
+const receiptPanel = document.getElementById("receiptPanel");
+const savedOrdersSection = document.getElementById("savedOrdersSection");
+const savedOrderList = document.getElementById("savedOrderList");
+const savedOrderCount = document.getElementById("savedOrderCount");
+const ordersStatus = document.getElementById("ordersStatus");
 
 const currency = new Intl.NumberFormat("en-PH", {
     style: "currency",
     currency: "PHP"
 });
 const MAX_QUANTITY = 99;
-let foods = [];
-let isLoadingFoods = false;
 let isPlacingOrder = false;
-let menuLoaded = false;
-let supabaseClient;
 
 function formatPrice(value) {
     return currency.format(value);
@@ -49,7 +55,7 @@ function makeIcon(name) {
     return icon;
 }
 
-// Illustrations are decorative; food names and prices always come from Supabase.
+// Illustrations are decorative; names and prices come from the built-in menu.
 function getFoodArt(name) {
     const styles = [
         [/burger/i, "🍔", "#f4e9d7"],
@@ -104,7 +110,7 @@ function updateOrderTotal(animate = true) {
     decreaseQuantity.disabled = isPlacingOrder || !validQuantity || quantity <= 1;
     increaseQuantity.disabled = isPlacingOrder || !validQuantity || quantity >= MAX_QUANTITY;
     placeOrderBtn.disabled = isPlacingOrder || !food || !validQuantity;
-    orderHint.textContent = food ? "Review your details, then place your order." : "Select a meal to get started.";
+    orderHint.textContent = food ? "Save your checkout locally. No payment is collected." : "Select a meal to get started.";
 
     if (animate && changed && totalDisplay.animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         totalDisplay.animate([
@@ -181,65 +187,113 @@ function setFoodPlaceholder(text) {
     foodSelect.replaceChildren(option);
 }
 
-async function loadFoods() {
-    if (isLoadingFoods || isPlacingOrder) return;
-    isLoadingFoods = true;
-    menuLoaded = false;
-    foodSelect.disabled = true;
-    foodSearch.disabled = true;
-    placeOrderBtn.disabled = true;
-    retryFoodsBtn.hidden = true;
-    foodGrid.setAttribute("aria-busy", "true");
-    menuStatus.textContent = "Getting the menu ready…";
-    setFoodPlaceholder("Loading the menu…");
-    foodGrid.replaceChildren();
-    for (let index = 0; index < 3; index++) {
-        const skeleton = document.createElement("div");
-        skeleton.className = "food-skeleton";
-        skeleton.setAttribute("aria-hidden", "true");
-        foodGrid.appendChild(skeleton);
-    }
+function loadFoods() {
+    setFoodPlaceholder("Choose your meal");
+    foods.forEach(food => {
+        const option = document.createElement("option");
+        option.value = String(food.id);
+        option.textContent = `${food.food_name} — ${formatPrice(food.price)}`;
+        foodSelect.appendChild(option);
+    });
+    foodSelect.disabled = false;
+    foodSearch.disabled = false;
+    renderFoods();
+    foodGrid.setAttribute("aria-busy", "false");
+    updateOrderTotal(false);
+}
 
+function readSavedOrders() {
+    const stored = window.localStorage.getItem(ORDERS_STORAGE_KEY);
+    if (stored === null) return [];
+    const orders = JSON.parse(stored);
+    const validOrder = order => order && typeof order.id === "string" && order.id.length > 0
+        && typeof order.created_at === "string" && Number.isFinite(Date.parse(order.created_at))
+        && typeof order.customer_name === "string" && order.customer_name.trim().length > 0
+        && typeof order.food_name === "string" && order.food_name.trim().length > 0
+        && isValidQuantity(order.quantity)
+        && Number.isFinite(order.price) && order.price >= 0
+        && Number.isFinite(order.total) && order.total === order.price * order.quantity
+        && order.status === "saved-locally";
+    if (!Array.isArray(orders) || !orders.every(validOrder)) {
+        throw new Error("Saved order data is invalid. Existing data has not been changed.");
+    }
+    return orders;
+}
+
+function renderReceipt(order, focus = false) {
+    const values = {
+        receiptId: order.id,
+        receiptDate: new Date(order.created_at).toLocaleString("en-PH"),
+        receiptName: order.customer_name,
+        receiptFood: order.food_name,
+        receiptQuantity: String(order.quantity),
+        receiptPrice: formatPrice(order.price),
+        receiptTotal: formatPrice(order.total)
+    };
+    Object.entries(values).forEach(([id, text]) => {
+        document.getElementById(id).textContent = text;
+    });
+    receiptPanel.hidden = false;
+    if (focus) receiptPanel.focus();
+}
+
+function renderSavedOrders(orders) {
+    savedOrdersSection.hidden = !orders.length;
+    savedOrderCount.textContent = `${orders.length} saved`;
+    ordersStatus.textContent = "";
+    const fragment = document.createDocumentFragment();
+    [...orders].reverse().slice(0, 5).forEach(order => {
+        const item = document.createElement("li");
+        const details = document.createElement("div");
+        const name = document.createElement("strong");
+        name.textContent = `${order.quantity} × ${order.food_name}`;
+        const info = document.createElement("small");
+        info.textContent = `${order.customer_name} · ${new Date(order.created_at).toLocaleString("en-PH")}`;
+        details.append(name, info);
+        const price = document.createElement("span");
+        price.className = "saved-order-price";
+        price.textContent = formatPrice(order.total);
+        const view = document.createElement("button");
+        view.type = "button";
+        view.className = "receipt-button";
+        view.textContent = "View receipt";
+        view.setAttribute("aria-label", `View receipt for ${order.quantity} ${order.food_name}, ${order.customer_name}`);
+        view.addEventListener("click", () => renderReceipt(order, true));
+        item.append(details, price, view);
+        fragment.appendChild(item);
+    });
+    savedOrderList.replaceChildren(fragment);
+}
+
+function loadSavedOrders() {
     try {
-        if (!supabaseClient) {
-            if (!window.supabase?.createClient) throw new Error("Supabase library is unavailable.");
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-        const { data, error } = await supabaseClient
-            .from("foods")
-            .select("id, food_name, price")
-            .order("id", { ascending: true });
-        if (error) throw error;
-
-        // Do not allow malformed records to result in invalid order totals.
-        foods = (data || []).filter(food => food.id != null
-            && typeof food.food_name === "string" && food.food_name.trim()
-            && food.price != null && String(food.price).trim() !== ""
-            && Number.isFinite(Number(food.price)) && Number(food.price) >= 0);
-        menuLoaded = true;
-        setFoodPlaceholder(foods.length ? "Choose your meal" : "No meals available");
-        foods.forEach(food => {
-            const option = document.createElement("option");
-            option.value = String(food.id);
-            option.textContent = `${food.food_name} — ${formatPrice(Number(food.price))}`;
-            foodSelect.appendChild(option);
-        });
-        foodSelect.disabled = !foods.length;
-        renderFoods();
+        const orders = readSavedOrders();
+        renderSavedOrders(orders);
+        if (orders.length) renderReceipt(orders[orders.length - 1]);
+        else receiptPanel.hidden = true;
     } catch (error) {
-        console.error("Error loading foods:", error);
-        foods = [];
-        foodGrid.replaceChildren();
-        setFoodPlaceholder("Menu unavailable");
-        menuCount.textContent = "Unavailable";
-        menuStatus.textContent = "We couldn’t load the menu. Check your connection and try again.";
-        retryFoodsBtn.hidden = false;
-    } finally {
-        isLoadingFoods = false;
-        foodSearch.disabled = !menuLoaded || !foods.length;
-        foodGrid.setAttribute("aria-busy", "false");
-        updateOrderTotal(false);
+        console.error("Unable to read saved orders:", error);
+        savedOrdersSection.hidden = false;
+        savedOrderList.replaceChildren();
+        savedOrderCount.textContent = "Unavailable";
+        ordersStatus.textContent = "Saved receipts couldn’t be read. Enable browser storage or use another browser. Existing data has not been changed.";
+        receiptPanel.hidden = true;
     }
+}
+
+async function saveOrder(order) {
+    const persist = () => {
+        // Read the latest records before writing, including orders from other tabs.
+        const orders = readSavedOrders();
+        orders.push(order);
+        window.localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+        return orders;
+    };
+    // Serialize checkouts across tabs when Web Locks are available.
+    if (window.navigator.locks?.request) {
+        return window.navigator.locks.request(ORDERS_STORAGE_KEY, persist);
+    }
+    return Promise.resolve().then(persist);
 }
 
 function showMessage(text, type) {
@@ -252,13 +306,12 @@ function setOrderBusy(busy) {
     orderFields.disabled = busy;
     orderForm.setAttribute("aria-busy", String(busy));
     placeOrderBtn.classList.toggle("is-loading", busy);
-    orderButtonLabel.textContent = busy ? "Placing your order…" : "Place order";
+    orderButtonLabel.textContent = busy ? "Saving checkout…" : "Check out";
     updateOrderTotal(false);
 }
 
 foodSelect.addEventListener("change", () => selectFood(foodSelect.value));
-foodSearch.addEventListener("input", () => { if (menuLoaded) renderFoods(); });
-retryFoodsBtn.addEventListener("click", loadFoods);
+foodSearch.addEventListener("input", renderFoods);
 quantityInput.addEventListener("input", () => updateOrderTotal());
 quantityInput.addEventListener("change", () => {
     if (!isValidQuantity(Number(quantityInput.value))) quantityInput.value = "1";
@@ -283,7 +336,7 @@ orderForm.addEventListener("submit", async event => {
     const food = getSelectedFood();
     const quantity = Number(quantityInput.value);
 
-    if (!name) {
+    if (!name || name.length > 100) {
         showMessage("Please enter your name so we know who the order is for.", "error");
         customerName.focus();
         return;
@@ -301,24 +354,39 @@ orderForm.addEventListener("submit", async event => {
 
     setOrderBusy(true);
     try {
-        // Preserve the original orders schema. Never submit orders for a preview.
-        const { error } = await supabaseClient.from("orders").insert([{
+        const uniqueId = window.crypto.randomUUID
+            ? window.crypto.randomUUID()
+            : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+        const order = {
+            id: `JC-${uniqueId}`,
+            created_at: new Date().toISOString(),
             customer_name: name,
             food_id: food.id,
+            food_name: food.food_name,
             quantity,
-            price: Number(food.price)
-        }]);
-        if (error) throw error;
+            price: food.price,
+            total: food.price * quantity,
+            status: "saved-locally"
+        };
+        const orders = await saveOrder(order);
 
         orderForm.reset();
         quantityInput.value = "1";
-        showMessage(`Order placed! Thanks, ${name}. Your ${food.food_name} order has been received.`, "success");
+        renderSavedOrders(orders);
+        renderReceipt(order, true);
+        showMessage(`Checkout saved, ${name}! Your receipt is on this device only. No payment was collected or order sent to a restaurant.`, "success");
     } catch (error) {
         console.error("Error placing order:", error);
-        showMessage("We couldn’t place your order. Your details are still here — please try again.", "error");
+        showMessage("Checkout wasn’t saved. Enable browser storage and check that saved data is valid. Your details are still here; no payment was collected.", "error");
     } finally {
         setOrderBusy(false);
     }
 });
 
+document.getElementById("printReceiptBtn").addEventListener("click", () => window.print());
+window.addEventListener("storage", event => {
+    if (event.key === ORDERS_STORAGE_KEY || event.key === null) loadSavedOrders();
+});
+
 loadFoods();
+loadSavedOrders();

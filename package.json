@@ -2,7 +2,7 @@
   "name": "jc-kainan-food-ordering",
   "version": "1.0.0",
   "private": true,
-  "description": "A responsive food ordering frontend backed by Supabase.",
+  "description": "A responsive five-meal food ordering frontend with local checkout receipts.",
   "scripts": {
     "start": "node tests/server.cjs",
     "test": "playwright test"

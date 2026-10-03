@@ -38,7 +38,7 @@
             <div class="hero-copy">
                 <span class="eyebrow"><span class="small-leaf" aria-hidden="true">✦</span> A LITTLE JOY ON YOUR PLATE</span>
                 <h1 id="heroTitle">Good food.<br>Great <span>mood.</span></h1>
-                <p>Your next favorite meal is just a few clicks away.<br class="desktop-break"> Pick something delicious. We’ll take your order.</p>
+                <p>Your next favorite meal is just a few clicks away.<br class="desktop-break"> Pick something delicious and create your order.</p>
                 <a class="primary-link" href="#menu">Explore the menu<svg class="icon"><use href="#icon-arrow"/></svg></a>
             </div>
             <div class="hero-art" aria-hidden="true">
@@ -52,8 +52,10 @@
         <ol class="order-steps" aria-label="How to order">
             <li><span>01</span>Pick your meal</li>
             <li><span>02</span>Make it yours</li>
-            <li><span>03</span>Place your order</li>
+            <li><span>03</span>Check out</li>
         </ol>
+
+        <div class="local-checkout-notice"><svg class="icon" aria-hidden="true"><use href="#icon-bag"/></svg><p><strong>Local checkout is ready.</strong> Orders and names are saved in this browser only, not sent to a restaurant. No payment is collected.</p></div>
 
         <div class="ordering-layout">
             <section id="menu" class="menu-section" aria-labelledby="menuTitle">
@@ -70,7 +72,6 @@
                 <div id="foodGrid" class="food-grid" aria-busy="true">
                     <div class="food-skeleton" aria-hidden="true"></div><div class="food-skeleton" aria-hidden="true"></div><div class="food-skeleton" aria-hidden="true"></div>
                 </div>
-                <button id="retryFoodsBtn" class="retry-button" type="button" hidden>Try loading the menu again<svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
                 <p class="menu-footnote"><svg class="icon" aria-hidden="true"><use href="#icon-leaf"/></svg>A good day starts with a good meal.</p>
             </section>
 
@@ -102,19 +103,39 @@
                     </fieldset>
                     <div class="order-summary"><span id="summaryMeal">No meal selected yet</span><span id="summaryQuantity">Choose from the menu</span></div>
                     <div class="total-box"><div><span>Your total</span><small>All prices in Philippine pesos</small></div><strong id="total" aria-live="polite" aria-atomic="true">₱0.00</strong></div>
-                    <button type="submit" id="placeOrderBtn" class="place-order-button" disabled><span class="button-spinner" aria-hidden="true"></span><span id="orderButtonLabel">Place order</span><svg class="icon button-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+                    <button type="submit" id="placeOrderBtn" class="place-order-button" disabled><span class="button-spinner" aria-hidden="true"></span><span id="orderButtonLabel">Check out</span><svg class="icon button-arrow" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
                     <p class="order-hint">Select a meal to get started.</p>
                     <div id="message" role="status" aria-live="polite" aria-atomic="true"></div>
                 </form>
+                <section id="receiptPanel" class="receipt-panel" aria-labelledby="receiptTitle" tabindex="-1" hidden>
+                    <div class="receipt-heading"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg><h3 id="receiptTitle">Your checkout receipt</h3></div>
+                    <p class="receipt-note">Saved locally · Not paid or sent to a restaurant</p>
+                    <dl class="receipt-details">
+                        <div><dt>Receipt</dt><dd id="receiptId"></dd></div>
+                        <div><dt>Date</dt><dd id="receiptDate"></dd></div>
+                        <div><dt>Customer</dt><dd id="receiptName"></dd></div>
+                        <div><dt>Meal</dt><dd id="receiptFood"></dd></div>
+                        <div><dt>Quantity</dt><dd id="receiptQuantity"></dd></div>
+                        <div><dt>Unit price</dt><dd id="receiptPrice"></dd></div>
+                        <div class="receipt-total"><dt>Total</dt><dd id="receiptTotal"></dd></div>
+                    </dl>
+                    <button id="printReceiptBtn" class="receipt-button" type="button">Print receipt</button>
+                </section>
             </aside>
         </div>
+
+        <section id="savedOrdersSection" class="saved-orders-section" aria-labelledby="savedOrdersTitle" hidden>
+            <div class="section-heading"><div><span class="eyebrow">ON THIS DEVICE</span><h2 id="savedOrdersTitle">Your saved orders</h2></div><span id="savedOrderCount" class="menu-count"></span></div>
+            <p class="saved-orders-intro">Your five most recent checkouts. Browser storage is not a restaurant order queue; clearing this site’s data removes these receipts.</p>
+            <p id="ordersStatus" class="menu-status" role="status" aria-live="polite"></p>
+            <ol id="savedOrderList" class="saved-order-list"></ol>
+        </section>
     </main>
 
     <footer class="site-footer"><span>JC<span class="brand-accent"> Kainan</span></span><p>Good food. Simple ordering. Happy you.</p><a href="#menu">Back to menu <span aria-hidden="true">↑</span></a></footer>
 </div>
 <noscript><p class="noscript-notice">Please enable JavaScript to view the menu and place an order.</p></noscript>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 
 </body>
